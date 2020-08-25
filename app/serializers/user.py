@@ -1,19 +1,14 @@
-from app.models.users import User
-from app.serializers import Serializer
-from app.utils.descriptor import Int, String, DateTime, Bool
+from dataclasses import dataclass
 
 
-class UserSerializer(Serializer):
-    id = Int(name="id")
-    name = String(name="name")
-    created_at = DateTime(name="created_at")
-    updated_at = DateTime(name="updated_at")
-    gender = Bool(name="gender")
-    age = Int(name="age")
+@dataclass
+class BlockUserSerializer:
+    id: int
+    name: str
+    gender: bool
+    age: int
+    v_level: int = 0
 
-    def __init__(self, user: User):
-        self.id = user.id
-        self.name = user.name
-        self.gender = user.gender
-        self.age = user.age
+    def picture(self):
 
+        return
