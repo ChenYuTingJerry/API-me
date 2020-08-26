@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date, ForeignKey
+from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date, ForeignKey, func
 from sqlalchemy.orm import relationship
 
 from app.db import pg
@@ -128,5 +128,5 @@ class UserOtherUserBlockShip(pg.Model):
     id = pg.Schema.Column(Integer, primary_key=True)
     user_id = pg.Schema.Column(ForeignKey("users.id"))
     other_user_id = pg.Schema.Column(ForeignKey("users.id"))
-    created_at = pg.Schema.Column(DateTime)
-    updated_at = pg.Schema.Column(DateTime)
+    created_at = pg.Schema.Column(DateTime, default=func.now())
+    updated_at = pg.Schema.Column(DateTime, default=func.now(), onupdate=func.now())

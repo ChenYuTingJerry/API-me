@@ -1,6 +1,6 @@
 # app
 HOST = "127.0.0.1"
-PORT = "3001"
+PORT = "3000"
 
 # db
 DB_SETTINGS = {
