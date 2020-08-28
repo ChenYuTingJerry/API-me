@@ -121,6 +121,10 @@ class User(pg.Model):
     apple_email = pg.Schema.Column(String)
     info_motified_at = pg.Schema.Column(Date)
 
+    @property
+    def v_level(self):
+        return self.vip_coin if self.vip_coin else 0
+
 
 class UserOtherUserBlockShip(pg.Model):
     __tablename__ = "user_other_user_block_ships"

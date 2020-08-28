@@ -1,6 +1,7 @@
 import json
 from dataclasses import asdict
 
+from marshmallow import Schema, fields
 from sanic import Blueprint, response
 
 from app.models.user import UserOtherUserBlockShip, User
@@ -9,14 +10,35 @@ from app.serializers.user import BlockUserSerializer
 bp = Blueprint("me_block_users", url_prefix="/blocked_users")
 
 
+class CreateBlockUserSchema(Schema):
+    token = fields.String()
+    blocked_user_id = fields.Int(required=True)
+
+
+class GetBlockUserSchema(Schema):
+    offset = fields.Int()
+    limit = fields.Int()
+    token = fields.String()
+
+
+create_block_user_schema = CreateBlockUserSchema()
+get_block_user_schema = GetBlockUserSchema()
+
+
 @bp.route("/", methods=["GET"])
 async def get_block_users(request):
     current_user = request.ctx.current_user
-    limit = request.args.get("limit")
-    offset = request.args.get("offset")
+    errors = get_block_user_schema.validate(request.args)
+    if errors:
+        return response.json(errors, status=422)
+    limit = request.args.get("limit", 0)
+    offset = request.args.get("offset", 0)
     users = (
         await User.load(
             User.id,
+            User.name,
+            User.gender,
+            User.age,
             block_ship=UserOtherUserBlockShip.load(
                 UserOtherUserBlockShip.user_id, UserOtherUserBlockShip.other_user_id
             ).on(User.id == UserOtherUserBlockShip.other_user_id),
@@ -26,10 +48,13 @@ async def get_block_users(request):
         .offset(offset)
         .gino.all()
     )
+
     blocked_users = list(
         map(
             lambda u: asdict(
-                BlockUserSerializer(id=u.id, name=u.name, gender=u.gender, age=u.age,)
+                BlockUserSerializer(
+                    id=u.id, name=u.name, gender=u.gender, age=u.age, v_level=u.v_level
+                )
             ),
             users,
         )
@@ -41,10 +66,16 @@ async def get_block_users(request):
 async def create_block_user(request):
     current_user = request.ctx.current_user
     request_body = json.loads(request.body)
-    blocked_user = await UserOtherUserBlockShip.query.where(
-        UserOtherUserBlockShip.user_id == current_user.id
-        and UserOtherUserBlockShip.other_user_id == request_body["blocked_user_id"]
-    ).gino.first()
+    errors = create_block_user_schema.validate(request_body)
+    if errors:
+        return response.json(errors, status=422)
+    blocked_user = (
+        await UserOtherUserBlockShip.query.where(
+            UserOtherUserBlockShip.user_id == current_user.id
+        )
+        .where(UserOtherUserBlockShip.other_user_id == request_body["blocked_user_id"])
+        .gino.first()
+    )
 
     if not blocked_user:
         await UserOtherUserBlockShip.create(

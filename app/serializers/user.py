@@ -8,7 +8,3 @@ class BlockUserSerializer:
     gender: bool
     age: int
     v_level: int = 0
-
-    def picture(self):
-
-        return

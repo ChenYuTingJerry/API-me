@@ -1,6 +1,5 @@
 import sanic
-from httpx import URL
-from sanic import Sanic
+from sanic import Sanic, response
 from sanic_openapi import swagger_blueprint
 
 from app import api
@@ -24,12 +23,18 @@ def register_routes(app: Sanic):
     app.blueprint(swagger_blueprint)
 
 
+def register_health_check(app: Sanic):
+    @app.route("/api/health")
+    async def health_check(requst):
+        return response.json({"status": "OK"})
+
+
 def create_app() -> sanic:
     app = Sanic(__name__)
 
     app.config.from_object(config)
 
-    register_listeners(app)
+    # register_listeners(app)
+    register_health_check(app)
     register_routes(app)
-    # print(app.router.routes_all)
     return app

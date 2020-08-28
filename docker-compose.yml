@@ -1,20 +1,21 @@
 version: '2'
 services:
   api:
-    restart: always
     build: .
     ports:
-      - "8000:8000"
+      - '3000:3000'
     depends_on:
       - db
   db:
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: test
-    image: postgres:latest
-    ports:
-      - 5432:5432
-    restart: always
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      image: postgres:9.5-alpine
+      volumes:
+        - dbvolumn02:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      ports:
+        - '5432:5432'
+volumes:
+  dbvolumn02:
+    external:
+      name: goodnight-rails_dbvolumn02

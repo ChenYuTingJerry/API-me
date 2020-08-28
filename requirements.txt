@@ -3,3 +3,4 @@ sanic-openapi
 gino
 pytz
 python-dateutil
+marshmallow
