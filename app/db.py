@@ -31,7 +31,7 @@ class GinoPostgresDB(AsyncDatabaseInterface):
 
     async def connect(self, db_settings: dict):
 
-        if os.getenv('ENABLE_SSM') == 1:
+        if os.getenv("ENV") == "prod":
             dsn = URL(
                 drivername="asyncpg",
                 host=os.getenv("PG_HOST"),

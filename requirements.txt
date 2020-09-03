@@ -4,3 +4,4 @@ gino
 pytz
 python-dateutil
 marshmallow
+rollbar

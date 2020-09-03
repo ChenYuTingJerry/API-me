@@ -2,7 +2,7 @@
 rm -rf tmp
 set -e
 
-if [ "$ENABLE_SSM" ]
+if [ "$ENV" = 'prod' ]
 then
   eval $(aws-env)
 fi
