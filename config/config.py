@@ -5,7 +5,7 @@ DEBUG = True
 
 # db
 DB_SETTINGS = {
-    "DB_HOST": "127.0.0.1",
+    "DB_HOST": "db",
     "DB_PORT": "5432",
     "DB_DATABASE": "goodnight_development",
     "DB_USERNAME": "postgres",

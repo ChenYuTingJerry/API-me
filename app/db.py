@@ -1,4 +1,5 @@
 import abc
+import os
 
 from gino import Gino
 from sqlalchemy.engine.url import URL
@@ -29,14 +30,26 @@ class GinoPostgresDB(AsyncDatabaseInterface):
         self._loop = loop
 
     async def connect(self, db_settings: dict):
-        dsn = URL(
-            drivername=db_settings.setdefault("DB_DRIVER", "asyncpg"),
-            host=db_settings.setdefault("DB_HOST", "localhost"),
-            port=db_settings.setdefault("DB_PORT", 5432),
-            username=db_settings.setdefault("DB_USER", "postgres"),
-            password=db_settings.setdefault("DB_PASSWORD", ""),
-            database=db_settings.setdefault("DB_DATABASE", "postgres"),
-        )
+
+        if os.getenv('ENABLE_SSM') == 1:
+            dsn = URL(
+                drivername="asyncpg",
+                host=os.getenv("PG_HOST"),
+                port=db_settings.get("DB_PORT"),
+                username=os.getenv("PG_USERNAME"),
+                password=os.getenv("PG_PASSWORD"),
+                database=os.getenv("PG_DATABASE"),
+            )
+        else:
+            dsn = URL(
+                drivername="asyncpg",
+                host=db_settings.get("DB_HOST"),
+                port=db_settings.get("DB_PORT"),
+                username=db_settings.get("DB_USERNAME"),
+                password=db_settings.get("DB_PASSWORD"),
+                database=db_settings.get("DB_DATABASE"),
+            )
+
         await self.engine.set_bind(
             dsn,
             echo=db_settings.setdefault("DB_ECHO", False),

@@ -1,3 +1,6 @@
+import os
+import pprint
+
 import sanic
 from sanic import Sanic, response
 from sanic_openapi import swagger_blueprint
@@ -34,7 +37,7 @@ def create_app() -> sanic:
 
     app.config.from_object(config)
 
-    # register_listeners(app)
+    register_listeners(app)
     register_health_check(app)
     register_routes(app)
     return app
