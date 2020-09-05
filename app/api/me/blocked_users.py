@@ -16,9 +16,10 @@ class CreateBlockUserSchema(Schema):
 
 
 class GetBlockUserSchema(Schema):
-    offset = fields.Int()
-    limit = fields.Int()
-    token = fields.String()
+    offset = fields.Int(required=True)
+    limit = fields.Int(required=True)
+    token = fields.String(required=True)
+    device_system_name = fields.String()
 
 
 create_block_user_schema = CreateBlockUserSchema()
