@@ -6,8 +6,11 @@ class Serializer:
             self.__setattr__(k, v)
 
     def to_dict(self):
-        return {
-            k: v
-            for k, v in self.__dict__.items()
-            if v is not None and not k.startswith("_")
-        }
+        result = {}
+        for k, v in self.__dict__.items():
+            if v is not None and not k.startswith("_"):
+                if isinstance(v, Serializer):
+                    result[k] = v.to_dict()
+                else:
+                    result[k] = v
+        return result

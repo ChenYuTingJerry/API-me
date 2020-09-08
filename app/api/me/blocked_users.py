@@ -4,7 +4,8 @@ from dataclasses import asdict
 from marshmallow import Schema, fields
 from sanic import Blueprint, response
 
-from app.models.user import UserOtherUserBlockShip, User
+from app.model.picture import NormalPicture
+from app.model.user import UserOtherUserBlockShip, User
 from app.serializers.user import BlockUserSerializer
 
 bp = Blueprint("me_block_users", url_prefix="/blocked_users")
@@ -43,6 +44,9 @@ async def get_block_users(request):
             block_ship=UserOtherUserBlockShip.load(
                 UserOtherUserBlockShip.user_id, UserOtherUserBlockShip.other_user_id
             ).on(User.id == UserOtherUserBlockShip.other_user_id),
+            picture=NormalPicture.load(NormalPicture.asset, NormalPicture.id).on(
+                NormalPicture.id == User.profile_picture_id
+            ),
         )
         .where(UserOtherUserBlockShip.user_id == current_user.id)
         .limit(limit)
@@ -50,15 +54,8 @@ async def get_block_users(request):
         .gino.all()
     )
 
-    blocked_users = list(
-        map(
-            lambda u: asdict(
-                BlockUserSerializer(
-                    id=u.id, name=u.name, gender=u.gender, age=u.age, v_level=u.v_level
-                )
-            ),
-            users,
-        )
+    blocked_users = tuple(
+        map(lambda u: BlockUserSerializer(u, u.picture).to_dict(), users,)
     )
     return response.json(blocked_users)
 

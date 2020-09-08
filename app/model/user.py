@@ -1,5 +1,6 @@
+from datetime import datetime
+
 from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date, ForeignKey, func
-from sqlalchemy.orm import relationship
 
 from app.db import pg
 
@@ -12,8 +13,6 @@ class User(pg.Model):
     udid = pg.Schema.Column(pg.Schema.String)
     sip_user_id = pg.Schema.Column(Integer)
     phone = pg.Schema.Column(pg.Schema.String)
-    created_at = pg.Schema.Column(DateTime)
-    updated_at = pg.Schema.Column(pg.Schema.DateTime)
     gender = pg.Schema.Column(Boolean)
     orientation = pg.Schema.Column(Integer)
     age = pg.Schema.Column(Integer)
@@ -120,6 +119,10 @@ class User(pg.Model):
     followers_count = pg.Schema.Column(Integer)
     apple_email = pg.Schema.Column(String)
     info_motified_at = pg.Schema.Column(Date)
+    updated_at = pg.Schema.Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+    created_at = pg.Schema.Column(DateTime, default=datetime.utcnow)
 
     @property
     def v_level(self):
@@ -132,5 +135,7 @@ class UserOtherUserBlockShip(pg.Model):
     id = pg.Schema.Column(Integer, primary_key=True)
     user_id = pg.Schema.Column(ForeignKey("users.id"))
     other_user_id = pg.Schema.Column(ForeignKey("users.id"))
-    created_at = pg.Schema.Column(DateTime, default=func.now())
-    updated_at = pg.Schema.Column(DateTime, default=func.now(), onupdate=func.now())
+    updated_at = pg.Schema.Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+    created_at = pg.Schema.Column(DateTime, default=datetime.utcnow)

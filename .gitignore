@@ -2,3 +2,5 @@ venv/
 postgres-data/
 .idea/
 *pycache*
+public/
+deploy.sh

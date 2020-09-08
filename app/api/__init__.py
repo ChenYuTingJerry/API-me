@@ -1,7 +1,7 @@
 from sanic import Blueprint
 
-from ..models.api_token import ApiToken
-from ..models.user import User
+from ..model.api_token import ApiToken
+from ..model.user import User
 from ..utils import dynamic
 
 modules = dynamic.import_submodules(__name__, __file__)

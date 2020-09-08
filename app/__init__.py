@@ -48,7 +48,7 @@ def register_monitor(app: Sanic):
 
 def create_app() -> sanic:
     app = Sanic(__name__)
-
+    app.static('/', './public')
     app.config.from_object(config)
 
     register_monitor(app)
