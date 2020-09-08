@@ -7,6 +7,7 @@ from sanic import Blueprint, response
 from app.model.picture import NormalPicture
 from app.model.user import UserOtherUserBlockShip, User
 from app.serializers.user import BlockUserSerializer
+from app.services import me_service
 
 bp = Blueprint("me_block_users", url_prefix="/blocked_users")
 
@@ -35,25 +36,7 @@ async def get_block_users(request):
         return response.json(errors, status=422)
     limit = request.args.get("limit", 0)
     offset = request.args.get("offset", 0)
-    users = (
-        await User.load(
-            User.id,
-            User.name,
-            User.gender,
-            User.age,
-            block_ship=UserOtherUserBlockShip.load(
-                UserOtherUserBlockShip.user_id, UserOtherUserBlockShip.other_user_id
-            ).on(User.id == UserOtherUserBlockShip.other_user_id),
-            picture=NormalPicture.load(NormalPicture.asset, NormalPicture.id).on(
-                NormalPicture.id == User.profile_picture_id
-            ),
-        )
-        .where(UserOtherUserBlockShip.user_id == current_user.id)
-        .limit(limit)
-        .offset(offset)
-        .gino.all()
-    )
-
+    users = await me_service.get_block_users(current_user.id, limit, offset)
     blocked_users = tuple(
         map(lambda u: BlockUserSerializer(u, u.picture).to_dict(), users,)
     )
@@ -67,26 +50,12 @@ async def create_block_user(request):
     errors = create_block_user_schema.validate(request_body)
     if errors:
         return response.json(errors, status=422)
-    blocked_user = (
-        await UserOtherUserBlockShip.query.where(
-            UserOtherUserBlockShip.user_id == current_user.id
-        )
-        .where(UserOtherUserBlockShip.other_user_id == request_body["blocked_user_id"])
-        .gino.first()
-    )
-
-    if not blocked_user:
-        await UserOtherUserBlockShip.create(
-            user_id=current_user.id, other_user_id=request_body["blocked_user_id"]
-        )
+    await me_service.create_block_user(current_user.id, request_body["blocked_user_id"])
     return response.json({"success": True})
 
 
-@bp.route("/<user_id:int>", methods=["DELETE"])
-async def delete_block_user(request, user_id):
+@bp.route("/<blocked_user_id:int>", methods=["DELETE"])
+async def delete_block_user(request, blocked_user_id):
     current_user = request.ctx.current_user
-    await UserOtherUserBlockShip.delete.where(
-        UserOtherUserBlockShip.other_user_id == user_id
-    ).where(UserOtherUserBlockShip.user_id == current_user.id).gino.status()
-
+    await me_service.remove_block_user(current_user.id, blocked_user_id)
     return response.json({"success": True})

@@ -20,12 +20,18 @@ async def save_normal_picture(image: File, user_id: int):
     md5 = hashlib.md5(store_dir.encode()).hexdigest()
     file_extension = image.type[image.type.index("/") + 1 :]
     file_name = f"{md5}-v2.{file_extension}"
-    image_name_map = {}
+    await _save_images_by_categories(categories, store_dir, file_name, image.body)
+    await p.update(asset=file_name).apply()
+
+
+async def _save_images_by_categories(
+    categories: tuple, store_dir: str, file_name: str, image_body: bytes
+):
+    result = {}
     for category in categories:
-        im = ImageFactory.get_instance(category)(image.body)
-        image_name_map[category] = (
+        im = ImageFactory.get_instance(category)(image_body)
+        result[category] = (
             f"{category}_{file_name}" if category != "original" else file_name
         )
-        await im.save(f"{store_dir}/{image_name_map[category]}")
-        setattr(p, category, image_name_map[category])
-    await p.update(asset=file_name).apply()
+        await im.save(f"{store_dir}/{result[category]}")
+    return result
