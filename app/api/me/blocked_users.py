@@ -1,11 +1,7 @@
 import json
-from dataclasses import asdict
-
 from marshmallow import Schema, fields
 from sanic import Blueprint, response
 
-from app.model.picture import NormalPicture
-from app.model.user import UserOtherUserBlockShip, User
 from app.serializers.user import BlockUserSerializer
 from app.services import me_service
 

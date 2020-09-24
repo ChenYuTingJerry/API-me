@@ -29,29 +29,32 @@ def register_routes(app: Sanic):
 
 
 def register_health_check(app: Sanic):
-    @app.route("/api/health")
-    async def health_check(requst):
+    @app.route("/")
+    async def health_check(request):
         return response.json({"status": "OK"})
 
 
 def register_monitor(app: Sanic):
+    class RollbarExceptionHandler(ErrorHandler):
+        def default(self, request, exception):
+            rollbar.report_exc_info(request=request)
+            return super().default(request, exception)
+
     if os.getenv("ENV") == "prod":
-        rollbar.init(os.getenv("ROLLBAR_ACCESS_TOKEN"))
+        environment = "production"
+    elif os.getenv("ENV") == "staging":
+        environment = "staging"
 
-        class RollbarExceptionHandler(ErrorHandler):
-            def default(self, request, exception):
-                rollbar.report_exc_info(request=request)
-                return super().default(request, exception)
-
-        app.error_handler = RollbarExceptionHandler()
+    rollbar.init(os.getenv("ROLLBAR_ACCESS_TOKEN"), environment=environment)
+    app.error_handler = RollbarExceptionHandler()
 
 
 def create_app() -> sanic:
     app = Sanic(__name__)
-    app.static('/', './public')
+    app.static("/", "./public")
     app.config.from_object(config)
 
-    register_monitor(app)
+    # register_monitor(app)
     register_listeners(app)
     register_health_check(app)
     register_routes(app)

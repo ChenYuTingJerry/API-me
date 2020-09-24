@@ -30,8 +30,7 @@ class GinoPostgresDB(AsyncDatabaseInterface):
         self._loop = loop
 
     async def connect(self, db_settings: dict):
-
-        if os.getenv("ENV") == "prod":
+        if os.getenv("ENV") != "dev":
             dsn = URL(
                 drivername="asyncpg",
                 host=os.getenv("PG_HOST"),

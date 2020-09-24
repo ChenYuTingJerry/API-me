@@ -1,6 +1,6 @@
 # app
 HOST = "0.0.0.0"
-PORT = "3001"
+PORT = "3000"
 DEBUG = True
 
 # db

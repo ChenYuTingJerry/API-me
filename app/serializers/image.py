@@ -24,10 +24,9 @@ class PictureSerializer(Serializer):
     thumb: PictureUrlSerializer
 
     def __init__(self, pic_type, category, asset_id, asset_name):
-        if os.getenv("ENV") == "prod":
-            pass
-        else:
+        if os.getenv("ENV") != "dev":
             prefix = f"http://{config.HOST}:{config.PORT}/uploads/{pic_type}/{category}/{asset_id}"
+
         self.normal = PictureUrlSerializer(f"{prefix}/normal_{asset_name}")
         self.medium = PictureUrlSerializer(f"{prefix}/medium_{asset_name}")
         self.thumb = PictureUrlSerializer(f"{prefix}/thumb_{asset_name}")
