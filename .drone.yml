@@ -7,15 +7,10 @@ pipeline:
       - flake8
   publish:
     image: plugins/ecr
-    pull: true
     settings:
-      access_key:
-        from_secret: ecr_access_key
-      secret_key:
-        from_secret: ecr_secret_key
+      access_key: ecr_access_key
+      secret_key: ecr_secret_key
       repo: gn-api-me
-      registry: 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com
+      registry: ecr_registry
       region: ap-southeast-1
-      dockerfile: Dockerfile
-      tags:
-        - latest
+      tags: latest
