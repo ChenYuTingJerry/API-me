@@ -46,7 +46,9 @@ async def create_block_user(request):
     errors = create_block_user_schema.validate(request_body)
     if errors:
         return response.json(errors, status=422)
-    await me_service.create_block_user(current_user.id, request_body["blocked_user_id"])
+    await me_service.create_block_user(
+        current_user.id, request_body["blocked_user_id"]
+    )
     return response.json({"success": True})
 
 

@@ -16,6 +16,8 @@ async def add_current_user(request):
         current_user = await User.load(
             User.id,
             User.name,
-            api_token=ApiToken.load(ApiToken.id).on(User.id == ApiToken.user_id),
+            api_token=ApiToken.load(ApiToken.id).on(
+                User.id == ApiToken.user_id
+            ),
         ).gino.first()
         request.ctx.current_user = current_user

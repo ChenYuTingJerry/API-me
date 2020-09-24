@@ -16,4 +16,3 @@ DB_SETTINGS = {
 # picture
 STATIC_PATH = "public"
 NORMAL_PICTURE_PATH = f"{STATIC_PATH}/uploads/normal_picture/asset/"
-
