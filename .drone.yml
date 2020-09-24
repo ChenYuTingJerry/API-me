@@ -5,20 +5,17 @@ pipeline:
     commands:
       - pip install flake8
       - flake8
-  ecr:
-    when:
-      branch: master
-      event: [ push ]
-    image: omerxx/drone-ecr-auth
+  publish:
+    image: plugins/ecr
     pull: true
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    secrets: [ ecr_access_key, ecr_secret_key ]
-    commands:
-      - $(AWS_ACCESS_KEY_ID=$ECR_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$ECR_SECRET_KEY aws ecr get-login --no-include-email --region ap-southeast-1)
-      - docker build -t gn-api-me .
-      - docker tag gn-api-me:latest 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com/gn-api-me:$$DRONE_BUILD_NUMBER
-      - docker push 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com/gn-api-me:$$DRONE_BUILD_NUMBER
-      - docker push 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com/gn-api-me:latest
-      - docker rmi 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com/gn-rails:$$DRONE_BUILD_NUMBER
+    settings:
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+      repo: gn-api-me
+      registry: 483957310387.dkr.ecr.ap-southeast-1.amazonaws.com
+      region: ap-southeast-1
+      dockerfile: Dockerfile
+      tags:
+        - latest
