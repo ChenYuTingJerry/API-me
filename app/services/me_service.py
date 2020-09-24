@@ -10,11 +10,12 @@ async def get_block_users(user_id: int, limit: int, offset: int) -> list:
             User.gender,
             User.age,
             block_ship=UserOtherUserBlockShip.load(
-                UserOtherUserBlockShip.user_id, UserOtherUserBlockShip.other_user_id
+                UserOtherUserBlockShip.user_id,
+                UserOtherUserBlockShip.other_user_id,
             ).on(User.id == UserOtherUserBlockShip.other_user_id),
-            picture=NormalPicture.load(NormalPicture.asset, NormalPicture.id).on(
-                NormalPicture.id == User.profile_picture_id
-            ),
+            picture=NormalPicture.load(
+                NormalPicture.asset, NormalPicture.id
+            ).on(NormalPicture.id == User.profile_picture_id),
         )
         .where(UserOtherUserBlockShip.user_id == user_id)
         .limit(limit)

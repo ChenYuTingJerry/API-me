@@ -18,5 +18,3 @@ class BlockUserSerializer(Serializer):
         self.age = user.age
         self.v_level = 0
         self.picture = NormalPictureSerializer(normal_picture)
-
-

@@ -16,7 +16,7 @@ class String:
 
     def __set__(self, instance, value):
         if type(value) != str:
-            raise ValueError(f'{self.name} type error: {type(value)}')
+            raise ValueError(f"{self.name} type error: {type(value)}")
         instance.__dict__[self.name] = value
 
 
@@ -29,11 +29,15 @@ class IsoFormatDatetime:
 
     def __set__(self, instance, value):
         if type(value) == datetime:
-            instance.__dict__[self.name] = value.replace(tzinfo=pytz.utc).isoformat()
+            instance.__dict__[self.name] = value.replace(
+                tzinfo=pytz.utc
+            ).isoformat()
         elif type(value) == str:
-            instance.__dict__[self.name] = parse(value).replace(tzinfo=pytz.utc).isoformat()
+            instance.__dict__[self.name] = (
+                parse(value).replace(tzinfo=pytz.utc).isoformat()
+            )
         else:
-            raise ValueError(f'{self.name} type error: {type(value)}')
+            raise ValueError(f"{self.name} type error: {type(value)}")
 
 
 class JSON:
@@ -45,13 +49,17 @@ class JSON:
 
     def __set__(self, instance, value):
         if type(value) == dict:
-            instance.__dict__[self.name] = json.dumps(value, ensure_ascii=False)
+            instance.__dict__[self.name] = json.dumps(
+                value, ensure_ascii=False
+            )
         elif type(value) == list:
-            instance.__dict__[self.name] = json.dumps(value, ensure_ascii=False)
+            instance.__dict__[self.name] = json.dumps(
+                value, ensure_ascii=False
+            )
         elif type(value) == str:
             instance.__dict__[self.name] = value
         else:
-            raise ValueError(f'{self.name} type error: {type(value)}')
+            raise ValueError(f"{self.name} type error: {type(value)}")
 
 
 class Integer:
@@ -67,5 +75,4 @@ class Integer:
         elif type(value) == Decimal:
             instance.__dict__[self.name] = int(value)
         else:
-            raise ValueError(f'{self.name} type error: {type(value)}')
-
+            raise ValueError(f"{self.name} type error: {type(value)}")

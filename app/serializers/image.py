@@ -1,5 +1,4 @@
 import os
-from dataclasses import dataclass
 
 from app.model.picture import NormalPicture
 from app.serializers import Serializer
@@ -25,7 +24,10 @@ class PictureSerializer(Serializer):
 
     def __init__(self, pic_type, category, asset_id, asset_name):
         if os.getenv("ENV") != "dev":
-            prefix = f"http://{config.HOST}:{config.PORT}/uploads/{pic_type}/{category}/{asset_id}"
+            prefix = (
+                f"http://{config.HOST}:{config.PORT}/uploads/"
+                f"{pic_type}/{category}/{asset_id}"
+            )
 
         self.normal = PictureUrlSerializer(f"{prefix}/normal_{asset_name}")
         self.medium = PictureUrlSerializer(f"{prefix}/medium_{asset_name}")
@@ -42,8 +44,11 @@ class NormalPictureSerializer(Serializer):
         if os.getenv("ENV") == "prod":
             pass
         else:
-            self.url = f"http://{config.HOST}:{config.PORT}" \
-                       f"/uploads/{pic_type}/{category}/{normal_picture.id}/{normal_picture.asset}"
+            self.url = (
+                f"http://{config.HOST}:{config.PORT}"
+                f"/uploads/{pic_type}/{category}/{normal_picture.id}"
+                f"/{normal_picture.asset}"
+            )
             self.asset = PictureSerializer(
                 pic_type, category, normal_picture.id, normal_picture.asset
             )

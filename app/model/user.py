@@ -1,6 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import Integer, String, DateTime, Boolean, Float, Date, ForeignKey, func
+from sqlalchemy import (
+    Integer,
+    String,
+    DateTime,
+    Boolean,
+    Float,
+    Date,
+    ForeignKey,
+)
 
 from app.db import pg
 
