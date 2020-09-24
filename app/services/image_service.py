@@ -17,11 +17,9 @@ async def save_normal_picture(image: File, user_id: int):
     store_dir = f"{config.NORMAL_PICTURE_PATH}/{p.id}"
     Path(store_dir).mkdir(parents=True, exist_ok=True)
     md5 = hashlib.md5(store_dir.encode()).hexdigest()
-    file_extension = image.type[image.type.index("/") + 1:]
+    file_extension = image.type[image.type.index("/") + 1 :]
     file_name = f"{md5}-v2.{file_extension}"
-    await _save_images_by_categories(
-        categories, store_dir, file_name, image.body
-    )
+    await _save_images_by_categories(categories, store_dir, file_name, image.body)
     await p.update(asset=file_name).apply()
 
 

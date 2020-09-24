@@ -25,9 +25,9 @@ class DictConvert:
             item = {}
             for key, value in dict_obj.items():
                 if isinstance(value, dict):
-                    item[
-                        StringConvert.to_snake_case(key)
-                    ] = DictConvert.to_snake_case(value)
+                    item[StringConvert.to_snake_case(key)] = DictConvert.to_snake_case(
+                        value
+                    )
                 else:
                     item[StringConvert.to_snake_case(key)] = value
             return item

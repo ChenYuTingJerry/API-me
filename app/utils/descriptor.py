@@ -29,9 +29,7 @@ class IsoFormatDatetime:
 
     def __set__(self, instance, value):
         if type(value) == datetime:
-            instance.__dict__[self.name] = value.replace(
-                tzinfo=pytz.utc
-            ).isoformat()
+            instance.__dict__[self.name] = value.replace(tzinfo=pytz.utc).isoformat()
         elif type(value) == str:
             instance.__dict__[self.name] = (
                 parse(value).replace(tzinfo=pytz.utc).isoformat()
@@ -49,13 +47,9 @@ class JSON:
 
     def __set__(self, instance, value):
         if type(value) == dict:
-            instance.__dict__[self.name] = json.dumps(
-                value, ensure_ascii=False
-            )
+            instance.__dict__[self.name] = json.dumps(value, ensure_ascii=False)
         elif type(value) == list:
-            instance.__dict__[self.name] = json.dumps(
-                value, ensure_ascii=False
-            )
+            instance.__dict__[self.name] = json.dumps(value, ensure_ascii=False)
         elif type(value) == str:
             instance.__dict__[self.name] = value
         else:
