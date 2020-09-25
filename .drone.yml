@@ -6,11 +6,21 @@ pipeline:
       - pip install flake8
       - flake8
   publish:
+    pull: true
     image: plugins/ecr
     settings:
-      access_key: ecr_access_key
-      secret_key: ecr_secret_key
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
       repo: gn-api-me
-      registry: ecr_registry
       region: ap-southeast-1
-      tags: latest
+      registry:
+        from_secret: ecr_registry
+      auto_tag: true
+      daemon_off: false
+      dockerfile: Dockerfile
+    when:
+      event:
+        exclude:
+        - pull_request
