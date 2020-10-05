@@ -1,26 +1,36 @@
-pipeline:
-  lint:
-    image: python:3.8-slim
-    pull: true
-    commands:
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: lint
+  image: python:3.8-slim
+  commands:
       - pip install flake8
       - flake8
-  publish:
-    pull: true
-    image: plugins/ecr
-    settings:
-      access_key:
-        from_secret: ecr_access_key
-      secret_key:
-        from_secret: ecr_secret_key
-      repo: gn-api-me
-      region: ap-southeast-1
-      registry:
-        from_secret: ecr_registry
-      auto_tag: true
-      daemon_off: false
-      dockerfile: Dockerfile
-    when:
-      event:
-        exclude:
-        - pull_request
+#pipeline:
+#  lint:
+#    image: python:3.8-slim
+#    pull: true
+#    commands:
+#      - pip install flake8
+#      - flake8
+#  publish:
+#    pull: true
+#    image: plugins/ecr
+#    settings:
+#      access_key:
+#        from_secret: ecr_access_key
+#      secret_key:
+#        from_secret: ecr_secret_key
+#      repo: gn-api-me
+#      region: ap-southeast-1
+#      registry:
+#        from_secret: ecr_registry
+#      auto_tag: true
+#      daemon_off: false
+#      dockerfile: Dockerfile
+#    when:
+#      event:
+#        exclude:
+#        - pull_request
