@@ -8,6 +8,18 @@ steps:
   commands:
       - pip install flake8
       - flake8
+
+- name: publish
+  image: plugins/ecr
+  settings:
+    dockerfile: Dockerfile
+    access_key:
+      from_secret: ecr_access_key
+    secret_key:
+      from_secret: ecr_secret_key
+    repo: gn-api-me
+    registry:
+      from_secret: ecr_registry
 #pipeline:
 #  lint:
 #    image: python:3.8-slim
