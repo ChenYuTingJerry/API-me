@@ -13,10 +13,6 @@ steps:
   image: plugins/ecr
   settings:
     dockerfile: Dockerfile
-    username:
-      from_secret: username
-    password:
-      from_secret: password
     access_key:
       from_secret: ecr_access_key
     secret_key:
