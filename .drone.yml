@@ -11,6 +11,8 @@ steps:
 
 - name: publish
   image: plugins/ecr
+  pull: true
+  privileged: true
   settings:
     dockerfile: Dockerfile
     access_key:
