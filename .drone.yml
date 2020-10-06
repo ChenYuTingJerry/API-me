@@ -10,29 +10,21 @@ steps:
       - flake8
 
 - name: publish
-  image: omerxx/drone-ecr-auth
-  volumes:
-    - name: dockersock
-      path: /var/run/docker.sock
-  environment:
-    ECR_ACCESS_KEY:
+  image: plugins/ecr
+  dockerfile: Dockerfile
+  pull: always
+  settings:
+    access_key:
       from_secret: ecr_access_key
-    ECR_SECRET_KEY:
+    secret_key:
       from_secret: ecr_secret_key
-    ECR_REGISTRY:
+    repo: gn-api-me
+    registry:
       from_secret: ecr_registry
-  commands:
-    - $(AWS_ACCESS_KEY_ID=$ECR_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$ECR_SECRET_KEY aws ecr get-login --no-include-email --region ap-southeast-1)
-    - docker build --rm=false -t $ECR_REGISTRY/gn-api-me -t $ECR_REGISTRY/gn-api-me:drone-$$DRONE_BUILD_NUMBER .
-    - docker push $ECR_REGISTRY/gn-api-me:drone-$$DRONE_BUILD_NUMBER
-    - docker push $ECR_REGISTRY/gn-api-me
-    - docker rmi $ECR_REGISTRY/gn-api-me:drone-$$DRONE_BUILD_NUMBER
-
-volumes:
-- name: dockersock
-  host:
-    path: /var/run/docker.sock
-
+    region: ap-southeast-1
+    tags:
+      - latest
+      - drone-${DRONE_BUILD_NUMBER}
 
 #pipeline:
 #  lint:
