@@ -24,7 +24,7 @@ steps:
     region: ap-southeast-1
     tags:
       - latest
-      - drone-${DRONE_BUILD_NUMBER}
+      - gn-api-me.${DRONE_BUILD_NUMBER}
 
 #pipeline:
 #  lint:
