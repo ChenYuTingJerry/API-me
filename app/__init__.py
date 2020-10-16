@@ -58,4 +58,6 @@ def create_app() -> sanic:
     register_listeners(app)
     register_health_check(app)
     register_routes(app)
+    for handler, (rule, router) in app.router.routes_names.items():
+        print(rule)
     return app

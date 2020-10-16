@@ -1,7 +1,7 @@
 from sanic import Blueprint
 from sanic.response import json
 
-bp = Blueprint("tap_pay", url_prefix="/")
+bp = Blueprint("tap_pay", url_prefix="")
 
 
 @bp.route("/echo", methods=["GET"])
