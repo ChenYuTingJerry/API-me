@@ -6,7 +6,7 @@ import json
 bp = Blueprint("tap_pay", url_prefix="")
 
 
-@bp.route("/echo", methods=["GET"])
+@bp.route("/echo", methods=["GET, POST"])
 async def echo(request):
     logger.info(
         json.dumps(
