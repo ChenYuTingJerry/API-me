@@ -15,7 +15,7 @@ async def echo(request):
                 "args": request.args,
                 "url": request.url,
                 "query_string": request.query_string,
-                "request_body": request.body,
+                "request_body": request.json,
             }
         )
     )
@@ -25,5 +25,6 @@ async def echo(request):
             "args": request.args,
             "url": request.url,
             "query_string": request.query_string,
+            "request_body": request.json,
         }
     )
