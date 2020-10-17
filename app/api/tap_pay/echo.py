@@ -1,6 +1,7 @@
 from sanic import Blueprint
 from sanic.log import logger
-from sanic.response import json
+from sanic.response import json as json_response
+import json
 
 bp = Blueprint("tap_pay", url_prefix="")
 
@@ -17,7 +18,7 @@ async def echo(request):
             }
         )
     )
-    return json(
+    return json_response(
         {
             "parsed": True,
             "args": request.args,
