@@ -14,16 +14,21 @@ GN-API-me is a API service of current user (called me). It mainly built by [Sani
 $pip install -r requirements.txt
 ```
 
-## Run the server
+## Start the server
 
 ```sh
-$python run.py
+docker-compose up
 ```
 
 ## Check server health
 
 ```sh
-$curl http://0.0.0.0:8000/api/health
-
+$curl http://0.0.0.0:3000/health
 {"status":"OK"}
+```
+
+## Stop the server
+
+```sh
+docker-compose down
 ```

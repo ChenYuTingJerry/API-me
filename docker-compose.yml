@@ -6,6 +6,10 @@ services:
       - '3000:3000'
     depends_on:
       - db
+    volumes:
+      - ./:/project
+    environment:
+      - ENV=dev
   db:
       image: postgres:9.5-alpine
       volumes:
@@ -13,6 +17,7 @@ services:
       environment:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
+        - ENV=dev
       ports:
         - '5433:5432'
 volumes:
